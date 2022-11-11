@@ -567,6 +567,7 @@ screen about():
                 text "[gui.about!t]\n"
 
             text _("Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]")
+            text _("Chess piece place SFX by {a=https://freesound.org/people/BiancaBothaPure/sounds/437484/}BiancaBothaPure{/a}")
 
 
 style about_label is gui_label

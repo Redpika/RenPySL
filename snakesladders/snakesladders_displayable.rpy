@@ -45,6 +45,7 @@ define ICON8 = THIS_PATH + IMAGE_PATH + 'icon8.png'
 define ICON9 = THIS_PATH + IMAGE_PATH + 'icon9.png'
 define ICON10 = THIS_PATH + IMAGE_PATH + 'icon10.png'
 define SLIDE_SFX = THIS_PATH + SFX_PATH + 'piece-slide.mp3'
+define PLACE_SFX = THIS_PATH + SFX_PATH + 'piece-place.wav'
 
 # screen constant
 define LOC_LEN = 72
@@ -386,6 +387,7 @@ init python:
                                 self.playerPiece[i] = Transform(Image(P3), zoom = MAX_ZOOM)
                             elif i == 3:
                                 self.playerPiece[i] = Transform(Image(P4), zoom = MAX_ZOOM)
+                            renpy.sound.play(PLACE_SFX)
                             renpy.redraw(self, 0.2)
                             self.check()
                         else:

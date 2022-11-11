@@ -48,8 +48,11 @@ label tutorial:
     "The symbol on the tiles tell the pair of snake or ladder"
     "If a piece stop on the start of a snake or a ladder, it will have to move to the end of said snake or ladder"
     hide tutorial3
+    show tutorial4 at truecenter
     "If a player will go over the end of the board, they need to move back based on the remainder of the move"
-    "That's about it on how to play Snakes and Ladders. Now to set the game!"
+    hide tutorial4
+    "That's about it on how to play Snakes and Ladders."
+    "Before that, lets set the game's setting!"
 
 label setting:
     menu:

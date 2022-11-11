@@ -358,6 +358,7 @@ screen main_menu():
     tag menu
 
     add gui.main_menu_background
+    add gui.main_menu_background_2 at truecenter
 
     ## This empty frame darkens the main menu.
     frame:
@@ -403,9 +404,11 @@ style main_menu_text:
 
 style main_menu_title:
     properties gui.text_properties("title")
+    color "#000000"
 
 style main_menu_version:
     properties gui.text_properties("version")
+    color "#000000"
 
 
 ## Game Menu screen ############################################################

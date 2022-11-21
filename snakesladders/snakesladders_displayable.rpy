@@ -338,19 +338,30 @@ init python:
                     if i != self.curPlayer-1 or self.posList[i]-1 == 0 or (not self.onMove and not self.onLaunch):
                         render.place(self.playerPiece[i], x=self.gridCoord.get(self.posList[i])[0], y=self.gridCoord.get(self.posList[i])[1])
 
+
                     if self.onMove and i == self.curPlayer-1:
                         if self.posList[i] <= 1:
                             self.onMove = False
                         else:
                             self.keyFrame += 1
-                            if self.round_up(self.posList[i]-1, -1) == self.round_up(self.posList[i], -1):
-                                x_offset = self.keyFrame * MOVEMENT
-                                y_offset = 0
-                            else:
-                                x_offset = 0
-                                y_offset = self.keyFrame * MOVEMENT
-                            if self.moveBack and self.posList[i] != 100:
-                                render.place(self.playerPiece[i], x = (self.gridCoord.get(self.posList[i]+1)[0] + x_offset), y = (self.gridCoord.get(self.posList[i])[1] - y_offset))
+                            if not self.moveBack:
+                                if self.round_up(self.posList[i]-1, -1) == self.round_up(self.posList[i], -1):
+                                    x_offset = self.keyFrame * MOVEMENT
+                                    y_offset = 0
+                                else:
+                                    x_offset = 0
+                                    y_offset = self.keyFrame * MOVEMENT
+                            elif self.moveBack:
+                                if self.posList[i] != 90:
+                                    x_offset = self.keyFrame * MOVEMENT
+                                    y_offset = 0
+                                else:
+                                    x_offset = 0
+                                    y_offset = self.keyFrame * MOVEMENT
+                            if self.moveBack and self.posList[i] != 100 and self.posList[i] >= 90:
+                                render.place(self.playerPiece[i], x = (self.gridCoord.get(self.posList[i]+1)[0] + x_offset), y = (self.gridCoord.get(self.posList[i]+1)[1] + y_offset))
+                            elif self.moveBack and self.posList[i] < 90:
+                                render.place(self.playerPiece[i], x = (self.gridCoord.get(self.posList[i]+1)[0] - x_offset), y = (self.gridCoord.get(self.posList[i]+1)[1] + y_offset))
                             elif (self.round_up(self.posList[i]-1,-1)/10)%2 == 1:
                                 render.place(self.playerPiece[i], x = (self.gridCoord.get(self.posList[i]-1)[0] + x_offset), y = (self.gridCoord.get(self.posList[i]-1)[1] - y_offset))
                             else:
@@ -480,7 +491,7 @@ init python:
                 self.diceResList[0] = number1
                 self.diceResList[1] = number2
                 self.diceTotal = number1 + number2
-                # self.diceTotal = 100
+                # self.diceTotal = 111
                 self.onDice = True
                 self.diceRandMax = random.randint(15, 20)
                 renpy.show_screen("rollerScreen", sl_displayable = self)

@@ -57,17 +57,14 @@ define LAUNCH_COUNT = 36
 # styles
 style roll_text:
     color "#12ed4f"
-    #hover_color "#0aff1d"
     hover_color "#00b00d"
     hover_bold True
 style exit_text:
     color "#ff0004"
-    #hover_color "#ff6466"
     hover_color "#c10003"
     hover_bold True
 style again_text:
     color "#2d00ff"
-    # hover_color "#6847ff"
     hover_color "#2000b6"
     hover_bold True
 style p1_text:
@@ -81,8 +78,9 @@ style p4_text:
 
 # BEGIN SCREEN
 
+# Main Game Screen
 screen sl(maxPlayer, p1, p2, p3, p4):
-
+    # Insert CDD
     default sl_displayable = SLDisplayable(
         maxPlayer = maxPlayer,
         p1 = p1,
@@ -92,6 +90,7 @@ screen sl(maxPlayer, p1, p2, p3, p4):
     )
     add Solid('#000')
 
+    # Upper Left Block UI
     fixed xpos 0 ypos 0:
         add Image(UIUL)
     fixed xpos 69 ypos 48:
@@ -117,6 +116,7 @@ screen sl(maxPlayer, p1, p2, p3, p4):
                 elif sl_displayable.curPlayer == 4:
                     text '{color=#FFFF00}Player [sl_displayable.curPlayer]{/p4_text}'
 
+    # Middle Left Block UI
     fixed xpos 0 ypos 240:
         add Image(UIML)
     fixed xpos 20 ypos 260 spacing 40:
@@ -128,6 +128,7 @@ screen sl(maxPlayer, p1, p2, p3, p4):
             if sl_displayable.maxPlayer == 4:
                 text "{=p4_text}P4 pos: [sl_displayable.posList[3]]{/p4_text}"
 
+    # Bottom Left Block UI
     fixed xpos 0 ypos 480:
         add Image(UIBL)
     fixed xpos 20 ypos 500 spacing 40:
@@ -141,10 +142,12 @@ screen sl(maxPlayer, p1, p2, p3, p4):
             for start, end in sl_displayable.snakePos.items():
                 text "{color=#770000}[start]{/color} {color=#FF0000}->{/color} {color=#EA8C8C}[end]{/color}"
 
+    # Game Board UI
     fixed xpos 280:
         add Image(IMG_BOARD)
         add sl_displayable
 
+    # Upper Right Block UI
     fixed xpos 1000 ypos 0:
         add Image(UIUR)
     fixed xpos 1020 ypos 20 spacing 40:
@@ -153,6 +156,7 @@ screen sl(maxPlayer, p1, p2, p3, p4):
             text '{color=#000000}Distance Left:{/color}'
             text '{color=#000000}{b}[distanceLeft]{/b}'
 
+    # Middle Right Block UI
     fixed xpos 1000 ypos 250:
         add Image(UIMR)
     fixed xpos 1020 ypos 270 spacing 40:
@@ -164,6 +168,7 @@ screen sl(maxPlayer, p1, p2, p3, p4):
             text '{color=#000000}Space Left:{/color}'
             text '{color=#000000}{b}[spaceLeft]{/b}{/color}'
 
+    # Bottom Right Block UI
     fixed xpos 1000 ypos 500:
         add Image(UIBR)
     fixed xpos 1020 ypos 520:
@@ -177,6 +182,7 @@ screen sl(maxPlayer, p1, p2, p3, p4):
                 hbox spacing 5:
                     textbutton 'Exit' text_style "exit_text" action MainMenu()
 
+# Dice Roll Screen
 screen rollerScreen(sl_displayable):
     fixed xpos 0 ypos 120:
         add Image(DICE_SCREEN)
@@ -185,6 +191,7 @@ screen rollerScreen(sl_displayable):
     fixed xpos 680 ypos 143:
         add sl_displayable.curDiceImage[1]
 
+# Win Screen
 screen winScreen(sl_displayable):
     fixed xpos 0 ypos 120:
         add Image (WIN_SCREEN)
@@ -241,35 +248,26 @@ init python:
     class SLDisplayable(renpy.Displayable):
         def __init__(self, maxPlayer = 4, p1 = 0, p2 = 0, p3 = 0, p4 = 0):
             super(SLDisplayable, self).__init__()
+
+            # Game Var
             self.posList = 4 * [0]
             self.curPlayer = 1
             self.maxPlayer = maxPlayer
             self.playerStat = [p1, p2, p3, p4]
             self.diceResList = 2 * [0]
             self.diceTotal = 0
-            self.winStat = False
-            self.moveBack = False
             self.ladderPos = {}
             self.snakePos = {}
-            self.gridCoord = {}
-            self.lStImage = {}
-            self.lEnImage = {}
-            self.sStImage = {}
-            self.sEnImage = {}
-            self.onDice = False
-            self.afterDice = False
-            self.keyFrame = 0
-            self.onMove = False
-            self.diceRandMax = 0
-            self.diceRandCount = 0
-            self.onLaunch = False
-            self.oldCoord = 0
-            self.launchCount = 0
-            self.xLaunch = 0
-            self.yLaunch = 0
-            self.coordSetUp()
+
+            # Game State
+            self.winStat = False
+            self.moveBack = False
+
+            # Game Init Func
             random.seed()
             self.initiateSLPos()
+
+            # Images
             self.playerPiece = {
             0: Transform(Image(P1), zoom=MAX_ZOOM),
             1: Transform(Image(P2), zoom=MAX_ZOOM),
@@ -303,11 +301,36 @@ init python:
             10: Transform(Image(ICON10), zoom=0.1),
             }
             self.curDiceImage = [self.diceImage.get(1), self.diceImage.get(1)]
+            self.lStImage = {}
+            self.lEnImage = {}
+            self.sStImage = {}
+            self.sEnImage = {}
+
+            # Render Var
+            self.gridCoord = {}
+            self.keyFrame = 0
+            self.diceRandMax = 0
+            self.diceRandCount = 0
+            self.oldCoord = 0
+            self.launchCount = 0
+            self.xLaunch = 0
+            self.yLaunch = 0
+
+            # Render State
+            self.onDice = False
+            self.afterDice = False
+            self.onMove = False
+            self.onLaunch = False
+
+            # Render Init Function
+            self.coordSetUp()
+
 
 
         def render(self, width, height, st, at):
             render = renpy.Render(width, height)
 
+            # Render Ladders and Snakes Icon
             Icon = 1
             for lStart, lEnd in self.ladderPos.items():
                 render.place(self.lStImage[lStart], x = self.gridCoord.get(lStart)[0], y = self.gridCoord.get(lStart)[1])
@@ -324,21 +347,27 @@ init python:
                 Icon += 1
 
             if not self.winStat:
+                # Call to move piece
                 if self.diceTotal != 0 and not self.onMove and not self.onLaunch:
                     self.move()
+                # Call for CPU
                 if self.playerStat[self.curPlayer-1] == 2 and self.diceTotal == 0 and not self.onMove and not self.onLaunch:
                     time.sleep(0.5)
                     self.dice()
+
+            # Hide Roll Screen
             if self.afterDice:
                 time.sleep(1)
                 renpy.hide_screen("rollerScreen")
                 self.afterDice = False
+
+            # Render Piece
             for i in range(0, self.maxPlayer):
                 if self.posList[i] != 0:
                     if i != self.curPlayer-1 or self.posList[i]-1 == 0 or (not self.onMove and not self.onLaunch):
                         render.place(self.playerPiece[i], x=self.gridCoord.get(self.posList[i])[0], y=self.gridCoord.get(self.posList[i])[1])
 
-
+                    # Render Move
                     if self.onMove and i == self.curPlayer-1:
                         if self.posList[i] <= 1:
                             self.onMove = False
@@ -376,6 +405,7 @@ init python:
                             else:
                                 renpy.redraw(self, 0)
 
+                    # Render Launch
                     elif self.onLaunch and i == self.curPlayer-1:
                         self.launchCount += 1
                         if self.launchCount <=5:
@@ -403,6 +433,8 @@ init python:
                             self.check()
                         else:
                             renpy.redraw(self, 0.1)
+
+            # Render Dice Roll
             if self.onDice:
                 self.diceRandCount += 1
                 self.curDiceImage[0] = self.diceImage.get(random.randint(1, 6))
@@ -418,11 +450,13 @@ init python:
             return render
 
         def event(self, ev, x, y, st):
+            # Spacebar
             if ev.type == pygame.KEYDOWN:
                 if ev.key == pygame.K_SPACE:
                     if (self.playerStat[self.curPlayer-1] and self.diceTotal == 0 and not self.onMove) or not self.onLaunch:
                         self.dice()
 
+        # Setting up Coordinate of tile and Images
         def coordSetUp(self):
             for i in range(0, 10):
                 for j in range(1, 11):
@@ -444,7 +478,7 @@ init python:
                         yCoord = LOC_LEN * (9 - i)
                         self.gridCoord.update({gridNum: [xCoord, yCoord]})
 
-
+        # Setting Up Snakes and Ladders Position
         def initiateSLPos(self):
             usedNumber = []
             for i in range(5):
@@ -484,6 +518,7 @@ init python:
             multiplier = 10 ** decimals
             return math.floor(n * multiplier) / multiplier
 
+        # Dice Function
         def dice(self):
             if not self.winStat and self.diceTotal == 0:
                 number1 = random.randint(1, 6)
@@ -491,12 +526,12 @@ init python:
                 self.diceResList[0] = number1
                 self.diceResList[1] = number2
                 self.diceTotal = number1 + number2
-                # self.diceTotal = 111
                 self.onDice = True
                 self.diceRandMax = random.randint(15, 20)
                 renpy.show_screen("rollerScreen", sl_displayable = self)
                 renpy.redraw(self, 0)
 
+        # Move Function
         def move(self):
             if not self.winStat and not self.onDice and self.diceTotal != 0:
                 self.onMove = True
@@ -510,6 +545,7 @@ init python:
                 renpy.sound.play(SLIDE_SFX)
                 renpy.redraw(self, 0)
 
+        # Conditionals Function
         def check(self):
             if self.posList[self.curPlayer - 1] in self.ladderPos:
                 self.launcher(self.posList[self.curPlayer - 1], self.ladderPos.get(self.posList[self.curPlayer - 1]))
@@ -525,6 +561,7 @@ init python:
                 if self.curPlayer > self.maxPlayer:
                     self.curPlayer = 1
 
+        # Snakes and Ladders Move Function
         def launcher(self, oldCoord, newCoord):
             self.onLaunch = True
             self.oldCoord = oldCoord
@@ -536,6 +573,7 @@ init python:
             self.yLaunch = (newY - oldY)/LAUNCH_COUNT
             renpy.redraw(self, 0.2)
 
+        # Reset Function
         def reset(self):
             self.posList.clear()
             self.posList = 4 * [0]
